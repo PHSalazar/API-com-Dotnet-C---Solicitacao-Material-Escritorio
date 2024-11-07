@@ -1,4 +1,6 @@
-﻿using API_SolicitacaoMaterialEscritorio.Services;
+﻿using API_SolicitacaoMaterialEscritorio.DTO;
+using API_SolicitacaoMaterialEscritorio.Models;
+using API_SolicitacaoMaterialEscritorio.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -57,10 +59,22 @@ namespace API_SolicitacaoMaterialEscritorio.Controllers
         /// <param name="id">ID do material desejado.</param>
         /// <param name="quantidade">Quantidade desejada.</param>
         /// <returns></returns>
-        [HttpGet("{id},{quantidade}")]
-        public async Task<IActionResult> SolicitarMaterial(int id, int quantidade)
+        [HttpPost("solicitar/{id}")]
+        public async Task<IActionResult> SolicitarMaterial(int id, [FromBody] SolicitarMaterialRequest request)
         {
-            var material = await _imaterial.SolicitarMaterial(id, quantidade);
+
+            if (request.Quantidade <= 0)
+            {
+                return BadRequest(
+                    new ResponseModel<Material>()
+                    {
+                        Message = "A quantidade solicitada não pode ser menor ou igual a zero.",
+                        IsSuccess = false
+                    });
+
+            }
+
+            var material = await _imaterial.SolicitarMaterial(id, request.Quantidade);
 
             if (material.IsSuccess == false)
             {
