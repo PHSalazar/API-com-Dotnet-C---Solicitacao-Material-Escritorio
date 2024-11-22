@@ -56,11 +56,9 @@ namespace API_SolicitacaoMaterialEscritorio.Controllers
         /// <summary>
         /// Solicita um material, caso a solicitação seja efetuada com sucesso, retorna o material e uma mensagem de sucesso, caso não se possível solicitar o material, retorna a mensagem de erro.
         /// </summary>
-        /// <param name="id">ID do material desejado.</param>
-        /// <param name="quantidade">Quantidade desejada.</param>
         /// <returns></returns>
-        [HttpPost("solicitar/{id}")]
-        public async Task<IActionResult> SolicitarMaterial(int id, [FromBody] SolicitarMaterialRequest request)
+        [HttpPost("solicitar/")]
+        public async Task<IActionResult> SolicitarMaterial([FromBody] SolicitarMaterialRequest request)
         {
 
             if (request.Quantidade <= 0)
@@ -74,7 +72,7 @@ namespace API_SolicitacaoMaterialEscritorio.Controllers
 
             }
 
-            var material = await _imaterial.SolicitarMaterial(id, request.Quantidade);
+            var material = await _imaterial.SolicitarMaterial(request.Id, request.Quantidade);
 
             if (material.IsSuccess == false)
             {
